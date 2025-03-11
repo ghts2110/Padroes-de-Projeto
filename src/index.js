@@ -1,0 +1,1 @@
+const server = require('/Users/gabriel/Desktop/calendar/src/server/server.js');
