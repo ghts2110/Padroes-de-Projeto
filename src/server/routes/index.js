@@ -3,18 +3,26 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
+// criar um usuario
 let users = [];
+
+// mudar o segredo to token
 const JWT_SECRET = '123';
 
+// adicionar recuperação de senha
+
 router.post('/registration', async (req, res) => {
+    // adicionar id
     const {email, password, name} = req.body;
 
     if(!email || !password || !name){
+        // trocar por console.log
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
 
     const userExists = users.find(user => user.email === email);
     if(userExists){
+        // trocar por console.log
         return res.status(400).json({ message: 'Email já cadastrado.' });
     }
 
@@ -30,6 +38,7 @@ router.post('/login', async (req, res) => {
     const {email, password} = req.body;
 
     if(!email || !password){
+        // trocar por console.log
         return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
     }
 
@@ -37,6 +46,7 @@ router.post('/login', async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if(!user || !isPasswordCorrect){
+        // trocar por console.log
         return res.status(400).json({ message: 'Email ou senha incorretos.' });
     }
 
@@ -48,6 +58,7 @@ const authenticateToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
+        // trocar por console.log
         return res.status(401).json({ message: 'Token não fornecido.' });
     }
 
