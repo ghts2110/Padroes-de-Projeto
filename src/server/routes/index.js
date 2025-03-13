@@ -11,28 +11,6 @@ const JWT_SECRET = '123';
 
 // adicionar recuperação de senha
 
-router.post('/registration', async (req, res) => {
-    // adicionar id
-    const {email, password, name} = req.body;
-
-    if(!email || !password || !name){
-        // trocar por console.log
-        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-    }
-
-    const userExists = users.find(user => user.email === email);
-    if(userExists){
-        // trocar por console.log
-        return res.status(400).json({ message: 'Email já cadastrado.' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    const newUser = { name, email, password: hashedPassword };
-    users.push(newUser);
-
-    res.send('Usuario cadastrado!');
-});
 
 router.post('/login', async (req, res) => {
     const {email, password} = req.body;
