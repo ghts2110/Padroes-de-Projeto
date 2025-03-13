@@ -11,6 +11,11 @@ const indexRoutes = require('/Users/gabriel/Desktop/calendar/src/server/routes/i
 app.use(express.json());
 app.use('', indexRoutes);
 
+app.get("/users", async (_, res) =>{
+    const users = await db.selectUsers();
+    res.json(users);
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`);

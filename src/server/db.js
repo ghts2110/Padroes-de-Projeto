@@ -23,3 +23,14 @@ async function connect() {
 }
 
 connect();
+
+async function selectUsers() {
+    const users = await connect();
+    const res = await users.query("SELECT * FROM users");
+
+    return res.rows;    
+}
+
+module.exports = {
+    selectUsers
+}
