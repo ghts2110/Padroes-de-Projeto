@@ -22,17 +22,13 @@ app.get("/users", async (_, res) =>{
 });
 
 app.post("/registration", async (req, res) =>{
-    await db.createUser(req.body);
-    res.sendStatus(201);
+    const infoMessage = await db.createUser(req.body);
+    res.json({message: infoMessage});
 });
 
 app.post("/login", async (req, res) =>{
-    try{   
-        await db.login(req.body);
-        res.json({message:'login bem susedido'});
-    }catch{
-        res.json({message:'erro ao tentar se logar'});
-    }
+    const infoMessage = await db.login(req.body);
+    res.json({message: infoMessage});
 });
 
 

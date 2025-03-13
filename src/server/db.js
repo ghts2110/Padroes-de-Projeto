@@ -45,11 +45,20 @@ async function selectUser(id) {
 
 async function createUser(info) {
     const users = await connect();
-    const sql = "INSERT INTO users(username, email, hashedpassword) VALUES ($1, $2, $3)";
+    const sql = "SELECT * FROM users WHERE email = $1";
+    const email = await users.query(sql, [info.email]);
     
+    if(email.rows.length != 0){
+        return "Email already registered";
+    }
+
+
+    sql = "INSERT INTO users(username, email, hashedpassword) VALUES ($1, $2, $3)";
     const hashedPassword = await bcrypt.hash(info.password, saltRounds);
 
     await users.query(sql, [info.name, info.email, hashedPassword]);
+
+    return "registered successfully";
 }
 
 async function login(info) {
@@ -58,15 +67,17 @@ async function login(info) {
     const email = await users.query(sql, [info.email]);
     
     if(email.rows.length == 0){
-        throw new Error('Email não encontrado');
+        return 'Email not found';
     }
 
     const user = email.rows[0];
     const password = await bcrypt.compare(info.password, user.hashedpassword);
 
     if (!password) {
-        throw new Error('Senha incorreta');
+        return 'Incorrect password';
     }
+
+    return 'successful login';
 }
 
 module.exports = {
