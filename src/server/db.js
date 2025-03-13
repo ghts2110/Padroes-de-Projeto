@@ -52,9 +52,26 @@ async function createUser(info) {
     await users.query(sql, [info.name, info.email, hashedPassword]);
 }
 
+async function login(info) {
+    const users = await connect();
+    const sql = "SELECT * FROM users WHERE email = $1";
+    const email = await users.query(sql, [info.email]);
+    
+    if(email.rows.length == 0){
+        throw new Error('Email não encontrado');
+    }
+
+    const user = email.rows[0];
+    const password = await bcrypt.compare(info.password, user.hashedpassword);
+
+    if (!password) {
+        throw new Error('Senha incorreta');
+    }
+}
 
 module.exports = {
     selectUsers,
     selectUser,
-    createUser
+    createUser,
+    login
 }

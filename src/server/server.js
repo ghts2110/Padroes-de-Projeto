@@ -26,6 +26,15 @@ app.post("/registration", async (req, res) =>{
     res.sendStatus(201);
 });
 
+app.post("/login", async (req, res) =>{
+    try{   
+        await db.login(req.body);
+        res.json({message:'login bem susedido'});
+    }catch{
+        res.json({message:'erro ao tentar se logar'});
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`);

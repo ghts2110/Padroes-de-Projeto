@@ -11,27 +11,6 @@ const JWT_SECRET = '123';
 
 // adicionar recuperação de senha
 
-
-router.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-
-    if(!email || !password){
-        // trocar por console.log
-        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-    }
-
-    const user = users.find(user => user.email === email);
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if(!user || !isPasswordCorrect){
-        // trocar por console.log
-        return res.status(400).json({ message: 'Email ou senha incorretos.' });
-    }
-
-    const token = jwt.sign({ userId: user.email }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Login bem-sucedido!', token });
-});
-
 const authenticateToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
