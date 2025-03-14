@@ -46,7 +46,7 @@ async function selectUser(id) {
 
 async function createUser(info) {
     const users = await connect();
-    const sql = "SELECT * FROM users WHERE email = $1";
+    let sql = "SELECT * FROM users WHERE email = $1";
     const email = await users.query(sql, [info.email]);
     
     if(email.rows.length != 0){
@@ -82,21 +82,21 @@ async function login(info) {
 }
 
 async function requestPasswordRecovery(info) {
-    const data = await connect();
+    const users = await connect();
     let sql = "SELECT * FROM users WHERE email = $1";
-    const email = await data.query(sql, [info.email]);
+    const email = await users.query(sql, [info.email]);
     
     if(email.rows.length == 0){
         return 'Email not found';
     }
 
     sql = "DELETE FROM passwordreset WHERE email = $1";
-    await data.query(sql, [info.email]);
+    await users.query(sql, [info.email]);
 
     const code = Math.floor(10000 + Math.random() * 90000).toString();
     const expirationTime = new Date(Date.now() + 300000).toISOString();
     sql = "INSERT INTO passwordreset(email, resetcode, expiresat) VALUES ($1, $2, $3)";
-    await data.query(sql, [info.email, code, expirationTime]);
+    await users.query(sql, [info.email, code, expirationTime]);
 
     try{
         await EmailService.enviarEmail(
@@ -109,7 +109,23 @@ async function requestPasswordRecovery(info) {
         return 'Error sending email';
 
     }
-    
+}
+
+async function resetPassword(info) {
+    const users = await connect();
+
+    let sql = "SELECT * FROM passwordreset WHERE email = $1 AND resetcode = $2";
+    const email = await users.query(sql, [info.email, info.code]);
+
+    if(email.rows.length == 0){
+        return 'incorrect or expired code';
+    }
+
+    sql = "UPDATE users SET hashedpassword = $1 WHERE email = $2";
+    const hashedPassword = await bcrypt.hash(info.newPassword, saltRounds);
+    await users.query(sql, [hashedPassword, info.email]);
+
+    return "password changed successfully";
 }
 
 module.exports = {
@@ -117,5 +133,6 @@ module.exports = {
     selectUser,
     createUser,
     login,
-    requestPasswordRecovery
+    requestPasswordRecovery,
+    resetPassword
 }

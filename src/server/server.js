@@ -36,6 +36,11 @@ app.post("/requestPasswordRecovery", async (req, res) => {
     res.json({message: infoMessage});
 });
 
+app.post("/resetPassword", async (req, res) => {
+    const infoMessage = await db.resetPassword(req.body);
+    res.json({message: infoMessage});
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`);
