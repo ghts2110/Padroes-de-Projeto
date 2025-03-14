@@ -31,6 +31,11 @@ app.post("/login", async (req, res) =>{
     res.json({message: infoMessage});
 });
 
+app.post("/requestPasswordRecovery", async (req, res) => {
+    const infoMessage = await db.requestPasswordRecovery(req.body);
+    res.json({message: infoMessage});
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`);
