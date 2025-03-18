@@ -1,4 +1,5 @@
 const EmailService = require('./RequestPasswordRecovery/EmailService');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 
@@ -78,7 +79,14 @@ async function login(info) {
         return 'Incorrect password';
     }
 
-    return 'successful login';
+    const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.SECRET_KEY,
+        { expiresIn: '1h' }
+    );
+    
+
+    return {message:'successful login', token};
 }
 
 async function requestPasswordRecovery(info) {

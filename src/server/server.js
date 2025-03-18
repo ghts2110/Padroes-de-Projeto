@@ -36,7 +36,7 @@ app.post("/requestPasswordRecovery", async (req, res) => {
     res.json({message: infoMessage});
 });
 
-app.post("/resetPassword", async (req, res) => {
+app.put("/resetPassword", async (req, res) => {
     const infoMessage = await db.resetPassword(req.body);
     res.json({message: infoMessage});
 });
