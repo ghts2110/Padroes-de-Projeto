@@ -27,7 +27,7 @@ app.post("/registration", async (req, res) =>{
 });
 
 app.post("/login", async (req, res) =>{
-    const infoMessage = await db.login(req.body);
+    const infoMessage = await db.login(req.body, res);
     res.json({message: infoMessage});
 });
 

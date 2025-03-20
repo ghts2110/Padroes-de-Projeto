@@ -1,5 +1,8 @@
 const EmailService = require('./RequestPasswordRecovery/EmailService');
+
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 
@@ -63,7 +66,7 @@ async function createUser(info) {
     return "registered successfully";
 }
 
-async function login(info) {
+async function login(info, res) {
     const users = await connect();
     const sql = "SELECT * FROM users WHERE email = $1";
     const email = await users.query(sql, [info.email]);
@@ -79,14 +82,27 @@ async function login(info) {
         return 'Incorrect password';
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
         { id: user.id, email: user.email },
         process.env.SECRET_KEY,
         { expiresIn: '1h' }
     );
+
+    const refreshToken = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.REFRESH_SECRET_KEY,
+        { expiresIn: '7d' }
+    );
+
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true, // Ativar se for HTTPS
+        sameSite: 'Strict', 
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     
 
-    return {message:'successful login', token};
+    return {message:'successful login', accessToken};
 }
 
 async function requestPasswordRecovery(info) {
