@@ -6,7 +6,7 @@ const db = require("./db");
 const app = express();
 const port = process.env.PORT;
 
-const indexRoutes = require('/Users/gabriel/Desktop/calendar/src/server/routes/index.js');
+const indexRoutes = require('./routes/index.js');
 
 app.use(express.json());
 app.use('', indexRoutes);

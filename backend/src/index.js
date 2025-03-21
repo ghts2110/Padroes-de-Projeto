@@ -1,1 +1,1 @@
-const server = require('/Users/gabriel/Desktop/calendar/src/server/server.js');
+const server = require('./server/server.js');
