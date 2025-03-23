@@ -19,7 +19,7 @@ export class UsersController {
   }
 
   @Get('profile')
-  @UseGuards(AuthGuard('jwt')) // Protege a rota
+  @UseGuards(AuthGuard('jwt'))
   getProfile() {
     return { message: 'Acesso autorizado! Você está autenticado.' };
   }
