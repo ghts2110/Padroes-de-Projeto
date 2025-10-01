@@ -1,4 +1,4 @@
-import { CartItem, lineTotal } from "./cartItem.js";
+import { CartItem, lineTotal } from "./cartItem";
 
 export class ShoppingCart {
   private items: CartItem[] = [];

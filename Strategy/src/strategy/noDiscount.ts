@@ -1,5 +1,5 @@
-import { ShoppingCart } from "../domain/shoppingCart.js";
-import { DiscountStrategy } from "./discountStrategy.js";
+import { ShoppingCart } from "../domain/shoppingCart";
+import { DiscountStrategy } from "./discountStrategy";
 
 export class NoDiscount implements DiscountStrategy {
   name = "Sem desconto";

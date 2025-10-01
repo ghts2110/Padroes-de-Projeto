@@ -1,4 +1,4 @@
-import { ShoppingCart } from "../domain/shoppingCart.js";
+import { ShoppingCart } from "../domain/shoppingCart";
 
 export interface DiscountStrategy {
   name: string;
